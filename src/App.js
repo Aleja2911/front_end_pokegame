@@ -16,7 +16,7 @@ const [pokemons, setPokemons] = useState([]);
 
 // get all Pokemons //
 useEffect(() => {
-    fetch('http://')
+    fetch('http://localhost:3000/pokemon')
       .then((res) => res.json())
       .then((data) => setPokemons(data))
       .catch((error) => console.log('the pokemon escaped!'));
@@ -33,7 +33,7 @@ useEffect(() => {
         <Switch>
           <Route 
             path='/'
-            render={() => (<PokemonList />)} >
+            render={(props) => (<PokemonList pokemons={pokemons} {...props}/>)} >
           </Route>
 
           <Route> 
