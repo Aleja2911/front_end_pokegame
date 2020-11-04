@@ -16,12 +16,11 @@ const [pokemons, setPokemons] = useState([]);
 
 // get all Pokemons //
 useEffect(() => {
-    fetch('http://localhost:3000/pokemon')
+    fetch('https://pokemon-be.herokuapp.com/pokemon')
       .then((res) => res.json())
       .then((data) => setPokemons(data))
       .catch((error) => console.log('the pokemon escaped!'));
 }, []);
-
 
 
   return (
