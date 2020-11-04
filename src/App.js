@@ -13,6 +13,7 @@ import PokemonSuperDetails from './Pages/PokemonSuperDetails';
 const  App = () =>  {
 // set up the states //
 const [pokemons, setPokemons] = useState([]);
+const [singlePokemon, setSinglePokemon] = useState(null);
 
 // get all Pokemons //
 useEffect(() => {
@@ -32,11 +33,11 @@ useEffect(() => {
         <Switch>
           <Route 
             path='/'
-            render={(props) => (<PokemonList pokemons={pokemons} {...props}/>)} >
+            render={(props) => (<PokemonList pokemons={pokemons} singlePokemon={singlePokemon} setSinglePokemon={setSinglePokemon} {...props}/>)} >
           </Route>
 
           <Route> 
-            <PokemonDetails /> 
+            <PokemonDetails  /> 
           </Route>
           <Route>
             <PokemonSuperDetails />       
