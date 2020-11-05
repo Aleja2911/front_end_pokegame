@@ -19,7 +19,6 @@
     "eject": "react-scripts eject"
   },
   "proxy": "https://pokemon-be.herokuapp.com/pokemon",
-
   "eslintConfig": {
     "extends": [
       "react-app",
