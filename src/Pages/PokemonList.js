@@ -1,20 +1,39 @@
-import React from 'react'; 
-import PokemonDetails from './PokemonDetails';
+import React from "react";
+import PokemonDetails from "./PokemonDetails";
 
-const PokemonList = ({ singlePokemon, setSinglePokemon, pokemons }) => {
+const PokemonList = ({
+  pokemonImg,
+  singlePokemon,
+  setSinglePokemon,
+  pokemons,
+  selected,
+  setSelected,
+}) => {
+  const handleClick = (e) => {
+    console.log(e.target.innerText);
+    setSinglePokemon(e.target.innerText);
+    setSelected(true);
+  };
 
+  console.log("SELECTED FROM LIST", selected);
 
-const handleClick = (e) => {
-    setSinglePokemon(e.target.innerText); 
-} 
-
-    return (
-        <div> <h3> All pokemons will display here </h3>
-           {singlePokemon ? <PokemonDetails singlePokemon={singlePokemon}/> :  
-            <ul> 
-                {pokemons && pokemons.map((pokemon, index) => <li key={index} onClick={handleClick}>{pokemon.name.english}</li> )}
-            </ul> }
-        </div>
-    );
-}
+  return (
+    <div>
+      {" "}
+      <h3> All pokemons will display here </h3>
+      {selected && singlePokemon ? (
+        <PokemonDetails pokemonImg={pokemonImg} />
+      ) : (
+        <ul>
+          {pokemons &&
+            pokemons.map((pokemon, index) => (
+              <li key={index} onClick={handleClick}>
+                {pokemon.name.english}
+              </li>
+            ))}
+        </ul>
+      )}
+    </div>
+  );
+};
 export default PokemonList;

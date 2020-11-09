@@ -1,57 +1,75 @@
 import React, { useState, useEffect } from "react";
+import Battlefied from "./Pages/Battlefield";
+import { Switch, Route } from "react-router-dom";
+import "./App.css";
+import PokemonList from "./Pages/PokemonList";
 
-//router//
-import { Switch, Route } from 'react-router-dom';
+const App = () => {
+  // set up the states //
+  const [pokemons, setPokemons] = useState([]);
+  const [singlePokemon, setSinglePokemon] = useState("pikachu");
+  const [selected, setSelected] = useState(null);
 
-import './App.css';
+  // THIS SHOULD BE DELETED IF YOU DECIDE TO USE BACKEND API CALL INSTEAD
+  const [pokemonImg, setPokemonImg] = useState({
+    front: "",
+    back: "",
+    animated: "",
+  });
 
-// importing pages //
-import PokemonList from './Pages/PokemonList';
-import PokemonDetails from './Pages/PokemonDetails';
-import PokemonSuperDetails from './Pages/PokemonSuperDetails';
-
-const  App = () =>  {
-// set up the states //
-const [pokemons, setPokemons] = useState([]);
-const [singlePokemon, setSinglePokemon] = useState(null);
-
-// get all Pokemons //
-useEffect(() => {
-    fetch('https://pokemon-be.herokuapp.com/pokemon')
+  // CATCH THEM ALL FROM POKEDEX
+  useEffect(() => {
+    fetch("https://pokemon-be.herokuapp.com/pokemon")
       .then((res) => res.json())
       .then((data) => setPokemons(data))
-      .catch((error) => console.log('the pokemon escaped!'));
-}, []);
+      .catch((error) => console.log("the pokemon escaped!"));
+  }, []);
 
+  // GET PICS FROM POKEAPI FOR POKEDEX (SHOULD BE DELETED IF YOU DECIDE TO USE BACKEND API CALL INSTEAD)
+  useEffect(() => {
+    fetch(`https://pokeapi.co/api/v2/pokemon/${singlePokemon.toLowerCase()}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPokemonImg((prev) => ({
+          ...prev,
+          front: data.sprites.front_default,
+          back: data.sprites.back_default,
+          animated:
+            data.sprites.versions["generation-v"]["black-white"].animated
+              .front_default,
+        }));
+      })
+      .catch((err) => console.log(err.message));
+  }, [singlePokemon]);
 
   return (
     <div className="App">
-      <div>
-        <h3> Hello World </h3>
-      </div>
       <main>
         <Switch>
-          <Route 
-            path='/'
-            render={(props) => (<PokemonList pokemons={pokemons} singlePokemon={singlePokemon} setSinglePokemon={setSinglePokemon} {...props}/>)} >
-          </Route>
+          <Route
+            path="/pokedex"
+            render={(props) => (
+              <PokemonList
+                pokemons={pokemons}
+                pokemonImg={pokemonImg}
+                singlePokemon={singlePokemon}
+                setSinglePokemon={setSinglePokemon}
+                selected={selected}
+                setSelected={setSelected}
+                {...props}
+              />
+            )}
+          ></Route>
 
-          <Route> 
-            <PokemonDetails  /> 
-          </Route>
-          <Route>
-            <PokemonSuperDetails />       
-          </Route>
+          <Route
+            path="/battlefield"
+            render={(props) => <Battlefied pokemons={pokemons} {...props} />}
+          />
         </Switch>
-          
-          
-    
       </main>
-      <footer>
-
-      </footer>
+      <footer></footer>
     </div>
   );
-}
+};
 
 export default App;
