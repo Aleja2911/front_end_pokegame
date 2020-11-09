@@ -54,6 +54,7 @@ export default function Battlefield({ pokemons }) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
   const [notFound, setNotFound] = useState(false);
+  const [fightmove, setFightmove] = useState("");
 
   // GAME MECHANICS
   const [startGame, setStartGame] = useState({
@@ -98,8 +99,8 @@ export default function Battlefield({ pokemons }) {
     }
   };
 
-  console.log(startGame.playerImg);
-  console.log(startGame.computerImg);
+  // console.log(startGame.playerImg);
+  // console.log(startGame.computerImg);
 
   // COLLECT SEARCH INPUT & RESET NOTFOUND
   const handleChange = (e) => {
@@ -107,13 +108,51 @@ export default function Battlefield({ pokemons }) {
     setNotFound(false);
   };
 
+  const fightingTechniques = [
+    "tackle",
+    "blaze-kick",
+    "aromatic-mist",
+    "bold strike",
+    "bubble-beam",
+    "destiny-bond",
+    "fire-blast",
+    "fishious rend",
+    "focus punch",
+    "glacial lance",
+    "grass-whistle",
+    "guillotine",
+    "horn drill",
+  ];
+
   // HANDLE GAME LOGIC
   const handleFight = () => {
     setStartGame((prev) => ({
       ...prev,
       start: true,
     }));
+
+    // DISPLAY FIGHT MOVES
+    let i = 0;
+    let id = setInterval(() => {
+      if (i === 3) {
+        setStartGame((prev) => ({
+          ...prev,
+          gameOver: true,
+        }));
+        clearInterval(id);
+      }
+      setFightmove(
+        `Your fighter used ${
+          fightingTechniques[
+            Math.floor(Math.random() * fightingTechniques.length)
+          ]
+        }`
+      );
+      i++;
+    }, 3000);
   };
+
+  useEffect(() => {}, [fightmove]);
 
   return (
     <Grid container direction="column" style={styles.paperContainer}>
@@ -200,6 +239,12 @@ export default function Battlefield({ pokemons }) {
           <Button variant="contained" color="primary" onClick={handleFight}>
             START FIGHT
           </Button>
+          {fightmove && (
+            <Typography variant="h4" className={classes.title}>
+              Fighting moves: {fightmove}
+            </Typography>
+          )}
+          {startGame.gameOver && <div>The Fight is over!</div>}
         </Grid>
       )}
     </Grid>
