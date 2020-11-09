@@ -1,27 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-const PokemonDetails = ({ singlePokemon }) => {
-  const [pokemonImg, setPokemonImg] = useState({
-    front: "",
-    back: "",
-    animated: "",
-  });
-
-  useEffect(() => {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${singlePokemon.toLowerCase()}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPokemonImg((prev) => ({
-          ...prev,
-          front: data.sprites.front_default,
-          back: data.sprites.back_default,
-          animated:
-            data.sprites.versions["generation-v"]["black-white"].animated
-              .front_default,
-        }));
-      });
-  }, []);
-
+const PokemonDetails = ({ pokemonImg }) => {
   return (
     <div>
       <img src={pokemonImg.front} style={{ width: 200 }} />
