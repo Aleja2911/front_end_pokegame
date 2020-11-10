@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Battlefied from "./Pages/Battlefield";
 import { Switch, Route } from "react-router-dom";
+
+
 import "./App.css";
 import PokemonList from "./Pages/PokemonList";
+
 
 const App = () => {
   // set up the states //
   const [pokemons, setPokemons] = useState([]);
   const [singlePokemon, setSinglePokemon] = useState("pikachu");
   const [selected, setSelected] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pokemonsPerPage] = useState(30);
 
   // THIS SHOULD BE DELETED IF YOU DECIDE TO USE BACKEND API CALL INSTEAD
   const [pokemonImg, setPokemonImg] = useState({
@@ -56,11 +61,13 @@ const App = () => {
                 setSinglePokemon={setSinglePokemon}
                 selected={selected}
                 setSelected={setSelected}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                pokemonsPerPage={pokemonsPerPage}
                 {...props}
               />
             )}
-          ></Route>
-
+            ></Route>
           <Route
             path="/battlefield"
             render={(props) => <Battlefied pokemons={pokemons} {...props} />}
