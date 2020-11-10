@@ -1,39 +1,73 @@
 import React from "react";
 import PokemonDetails from "./PokemonDetails";
+import Paginations from "./Pagination";
+import { Link } from "react-router-dom";
+import { Grid, TextField, Button } from "@material-ui/core";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Typography from "@material-ui/core/Typography";
+
+import { makeStyles } from "@material-ui/core/styles";
+
+import NavBar from "./NavBar";
+
+const useStyles = makeStyles({
+  root: {
+    maxWidth: 345,
+  },
+  listContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+});
 
 const PokemonList = ({
-  pokemonImg,
-  singlePokemon,
-  setSinglePokemon,
   pokemons,
   selected,
   setSelected,
+  currentPage,
+  setCurrentPage,
+  pokemonsPerPage,
 }) => {
-  const handleClick = (e) => {
-    console.log(e.target.innerText);
-    setSinglePokemon(e.target.innerText);
-    setSelected(true);
-  };
+  const classes = useStyles();
 
-  console.log("SELECTED FROM LIST", selected);
+  // PAGINATION
+  const indexOfLastPokemon = currentPage * pokemonsPerPage;
+  const indexOfFirstPokemon = indexOfLastPokemon - pokemonsPerPage;
+  const currentPokemons = pokemons.slice(
+    indexOfFirstPokemon,
+    indexOfLastPokemon
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div>
-      {" "}
-      <h3> All pokemons will display here </h3>
-      {selected && singlePokemon ? (
-        <PokemonDetails pokemonImg={pokemonImg} />
+    <Grid container direction="column">
+      <NavBar />
+      {selected ? (
+        <PokemonDetails />
       ) : (
-        <ul>
-          {pokemons &&
-            pokemons.map((pokemon, index) => (
-              <li key={index} onClick={handleClick}>
-                {pokemon.name.english}
-              </li>
-            ))}
-        </ul>
+        <Grid item>
+          <List className={classes.listContainer}>
+            {pokemons &&
+              currentPokemons.map((pokemon, index) => (
+                <Link to={`/pokedex/${pokemon.id}`}>
+                  <ListItem key={index} onClick={() => setSelected(true)}>
+                    <Typography variant="h6">{pokemon.name.english}</Typography>
+                  </ListItem>
+                </Link>
+              ))}
+          </List>
+        </Grid>
       )}
-    </div>
+      <Paginations
+        pokemonsPerPage={pokemonsPerPage}
+        pokemons={pokemons.length}
+        paginate={paginate}
+      />
+    </Grid>
   );
 };
 export default PokemonList;

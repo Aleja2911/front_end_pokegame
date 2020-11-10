@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "20px",
     paddingRight: "20px",
     marginTop: "5px",
-    marginBottom: "5px",
+    marginBottom: "50px",
   },
   searchIcon: {
     alignSelf: "flex-end",
@@ -41,15 +41,17 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Permanent Marker",
     color: "orange",
   },
-}));
-
-const styles = {
-  paperContainer: {
+  gameInfo: {
+    height: "200px",
+  },
+  outerContainer: {
     backgroundImage: `url(${wallpaper})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
+    height: "100vh",
   },
-};
+}));
+
 export default function Battlefield({ pokemons }) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
@@ -58,14 +60,16 @@ export default function Battlefield({ pokemons }) {
 
   // GAME MECHANICS
   const [startGame, setStartGame] = useState({
-    computerChoice: "",
+    fighterNames: [],
     computerImg:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/166.gif",
     playerImg: "",
     start: false,
     gameOver: false,
+    winner: null,
   });
 
+  // change this so fetches are chained !
   // CHECK IF SELECTED FIGHTER EXISTS AND IF SO, GET IMG AND SET IN SETGAME
   const handleClick = () => {
     const fighter = pokemons.find((el) => el.name.english === search);
@@ -93,14 +97,16 @@ export default function Battlefield({ pokemons }) {
         .then((data) => {
           setStartGame((prev) => ({
             ...prev,
-            computerImg: data.pics.animated,
+            computerImg: data.pics.animated || data.pics.front,
           }));
         });
     }
   };
 
-  // console.log(startGame.playerImg);
-  // console.log(startGame.computerImg);
+  // WHY AM I PRINTING THIS ALL OVER
+  console.log(startGame.fighterNames);
+  console.log(startGame.playerImg);
+  console.log(startGame.computerImg);
 
   // COLLECT SEARCH INPUT & RESET NOTFOUND
   const handleChange = (e) => {
@@ -138,6 +144,7 @@ export default function Battlefield({ pokemons }) {
         setStartGame((prev) => ({
           ...prev,
           gameOver: true,
+          winner: Math.floor(Math.random() * 2),
         }));
         clearInterval(id);
       }
@@ -154,8 +161,21 @@ export default function Battlefield({ pokemons }) {
 
   useEffect(() => {}, [fightmove]);
 
+  // HANDLE GAME RESTART
+  const handleReset = () => {
+    console.log("game was reset!");
+    setStartGame((prev) => ({
+      fighterNames: [],
+      computerImg: "",
+      playerImg: "",
+      start: false,
+      gameOver: false,
+      winner: null,
+    }));
+  };
+
   return (
-    <Grid container direction="column" style={styles.paperContainer}>
+    <Grid container direction="column" className={classes.outerContainer}>
       <NavBar />
       <Grid item>
         <img src={logo} style={{ width: 300 }} />
@@ -234,19 +254,33 @@ export default function Battlefield({ pokemons }) {
           </Typography>
         )}
       </Grid>
-      {!notFound && startGame.playerImg && (
-        <Grid item>
+      <Grid item>
+        {!notFound && startGame.playerImg && !startGame.start && (
           <Button variant="contained" color="primary" onClick={handleFight}>
             START FIGHT
           </Button>
-          {fightmove && (
+        )}
+
+        {startGame.start && !startGame.gameOver && (
+          <Typography variant="h4" className={classes.title}>
+            {fightmove}
+          </Typography>
+        )}
+
+        {startGame.gameOver && (
+          <Grid item>
             <Typography variant="h4" className={classes.title}>
-              Fighting moves: {fightmove}
+              ... fainted!
             </Typography>
-          )}
-          {startGame.gameOver && <div>The Fight is over!</div>}
-        </Grid>
-      )}
+            <Typography variant="h4" className={classes.title}>
+              ... is the winner!
+            </Typography>
+            <Button variant="contained" color="secondary" onClick={handleReset}>
+              Fight again
+            </Button>
+          </Grid>
+        )}
+      </Grid>
     </Grid>
   );
 }
