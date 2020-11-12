@@ -2,10 +2,9 @@ import React from "react";
 import PokemonDetails from "./PokemonDetails";
 import Paginations from "./Pagination";
 import { Link } from "react-router-dom";
-import { Grid, TextField, Button } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
