@@ -3,17 +3,13 @@ import vs from "../assets/vs.png";
 import logo from "../assets/logo.png";
 import { Grid, TextField, Button } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
 import NavBar from "./NavBar";
 import wallpaper from "../assets/mk-retro.jpg";
-import { Repeat } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
-import { AccessAlarm, ThreeDRotation } from "@material-ui/icons";
 import Icon from "@mdi/react";
-import { mdiAccount } from "@mdi/js";
-import { mdiPokeball } from "@mdi/js";
+import { mdiAxisLock, mdiPokeball } from "@mdi/js";
+const axios = require("axios");
 
-// use as custom style repo and pass on els like: className={classes.backgroundStyles}
 const useStyles = makeStyles((theme) => ({
   searchContainer: {
     display: "flex",
@@ -61,17 +57,17 @@ export default function Battlefield({ pokemons }) {
   // GAME MECHANICS
   const [startGame, setStartGame] = useState({
     fighterNames: [],
-    computerImg:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/166.gif",
+    computerImg: "",
+    computerName: "",
     playerImg: "",
+    playerName: "",
     start: false,
     gameOver: false,
     winner: null,
   });
 
-  // change this so fetches are chained !
   // CHECK IF SELECTED FIGHTER EXISTS AND IF SO, GET IMG AND SET IN SETGAME
-  const handleClick = () => {
+  const handleClick = async () => {
     const fighter = pokemons.find((el) => el.name.english === search);
     console.log("fighter", fighter);
     if (!fighter) {
@@ -80,26 +76,31 @@ export default function Battlefield({ pokemons }) {
     } else {
       console.log("found!");
       setNotFound(false);
-      fetch(`https://pokemon-be.herokuapp.com/pokemon/${fighter.id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setStartGame((prev) => ({
-            ...prev,
-            playerImg: data.pics.animated,
-          }));
-        });
-      fetch(
-        `https://pokemon-be.herokuapp.com/pokemon/${Math.floor(
-          Math.random() * pokemons.length
-        )}`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setStartGame((prev) => ({
-            ...prev,
-            computerImg: data.pics.animated || data.pics.front,
-          }));
-        });
+
+      const { data: player } = await axios
+        .get(`https://pokemon-be.herokuapp.com/pokemon/${fighter.id}`)
+        .catch((err) => console.log(err.message));
+
+      const { data: computer } = await axios
+        .get(
+          `https://pokemon-be.herokuapp.com/pokemon/${Math.floor(
+            Math.random() * pokemons.length
+          )}`
+        )
+        .catch((err) => console.log(err.message));
+
+      console.log("player1", player);
+      console.log("player2", computer);
+
+      if (player && computer) {
+        setStartGame((prev) => ({
+          ...prev,
+          playerImg: player.pics.animated,
+          playerName: player.name.english,
+          computerImg: computer.pics.animated || computer.pics.front,
+          computerName: computer.name.english,
+        }));
+      }
     }
   };
 
@@ -167,7 +168,9 @@ export default function Battlefield({ pokemons }) {
     setStartGame((prev) => ({
       fighterNames: [],
       computerImg: "",
+      computerName: "",
       playerImg: "",
+      playerName: "",
       start: false,
       gameOver: false,
       winner: null,
@@ -178,7 +181,7 @@ export default function Battlefield({ pokemons }) {
     <Grid container direction="column" className={classes.outerContainer}>
       <NavBar />
       <Grid item>
-        <img src={logo} style={{ width: 300 }} />
+        <img src={logo} style={{ width: 300 }} alt="logo" />
       </Grid>
       <Grid item container>
         <Grid item sm={6}>
@@ -210,7 +213,7 @@ export default function Battlefield({ pokemons }) {
         </Grid>
 
         <Grid item sm={2}>
-          <img src={vs} style={{ width: 100 }} />
+          <img src={vs} style={{ width: 100 }} alt="pokemon" />
         </Grid>
 
         <Grid item xs={12} sm={4}>
