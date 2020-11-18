@@ -35,13 +35,19 @@ export default function ButtonAppBar() {
               Pokémon Kombat
             </Link>
           </Typography>
-          <Typography variant="h6" align="right" className={classes.title}>
+          <Typography variant="h6" align="center" className={classes.title}>
             <Link className={classes.link} to="/pokedex">
               Pokedéx
             </Link>
           </Typography>
+          <Typography variant="h6" align="right" className={classes.title}>
+            <Link className={classes.link} to="/highscore">
+              Highscore
+            </Link>
+            </Typography>
         </Toolbar>
       </AppBar>
     </div>
   );
 }
+

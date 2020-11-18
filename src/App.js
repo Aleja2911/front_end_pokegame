@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import Battlefied from "./Pages/Battlefield";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
+import "./Login.css"
 import PokemonList from "./Pages/PokemonList";
+import Login from './Pages/Login';
+import Highscore from './Pages/Highscore'
 
 const App = () => {
   const [pokemons, setPokemons] = useState([]);
@@ -24,6 +27,12 @@ const App = () => {
     <div className="App">
       <main>
         <Switch>
+        <Route path='/login'>
+          <Login/>
+        </Route>  
+        <Route path='/highscore'>
+          <Highscore/>
+        </Route>      
           <Route
             path="/pokedex/:id"
             render={(props) => (
