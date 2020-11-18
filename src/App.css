@@ -1,5 +1,62 @@
 .App {
   text-align: center;
+ 
+}
+
+.Highscore {
+  font-family: Comic Sans MS;
+}
+
+.mainContainer {
+  width: 100%;
+ 
+ 
+}
+
+.header {
+  text-align: center;
+  background-color: rgb(0, 153, 255);
+  width: 100%;
+}
+
+.uldiv {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+ margin-left: 80px;
+  
+ 
 }
 
 
+
+li {
+  display: flex;
+  padding: 10px;
+  width: 100%;
+
+  
+}
+
+li > div :nth-child(1) {
+  margin-right: 110px;
+  text-align: left;
+}
+
+li > div :nth-child(2) {
+  margin-right: 100px;
+  text-align: center;
+}
+
+.innerdiv {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+ 
+  
+}
+
+.innerdiv > div {
+width:400px; 
+
+}
